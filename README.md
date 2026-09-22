@@ -1,59 +1,30 @@
 # Office Agent Skills
 
-A cross-platform, open-source Agent Skills toolkit for creating, inspecting, rendering, validating, styling, and populating authorized templates for DOCX, XLSX, PPTX, and PDF files.
+The recommended Antigravity integration is now a single unified skill:
 
-## Choose a generation mode
-
-- **Scratch:** create a new document using `styles/default.json` or another theme.
-- **Template:** populate a user-owned branded template using explicit placeholders or mappings.
-- **Edit:** modify selected regions without rebuilding unrelated content.
-
-See [docs/TEMPLATES.md](docs/TEMPLATES.md) and `skills/office-branding/SKILL.md`.
-
-## Install
-
-```bash
-# Linux
-./scripts/setup-linux.sh
-
-# macOS
-./scripts/setup-macos.sh
-
-# Windows PowerShell
-Set-ExecutionPolicy -Scope Process Bypass
-.\scripts\setup-windows.ps1
+```text
+skills/office-agent/SKILL.md
 ```
 
-## Agent integration
-
-Copy the skills to a compatible project:
+Install it globally:
 
 ```bash
-mkdir -p .agents/skills
-cp -R skills/* .agents/skills/
+mkdir -p ~/.gemini/skills/office-agent
+cp skills/office-agent/SKILL.md ~/.gemini/skills/office-agent/SKILL.md
 ```
 
-The skills include `office-docx`, `office-xlsx`, `office-pptx`, `office-pdf`, and `office-branding`.
+Keep the repository and its virtual environment at:
 
-## Template examples
-
-DOCX:
-
-```bash
-.venv/bin/python scripts/replace-docx-placeholders.py \
-  templates/report.docx outputs/report.docx \
-  --value company_name="Example Corporation"
+```text
+/Ubuntu/Git/office-agent-skills
 ```
 
-XLSX:
+The skill uses:
 
-```bash
-.venv/bin/python scripts/populate-xlsx-template.py \
-  templates/budget.xlsx data.json outputs/budget.xlsx
+```text
+/Ubuntu/Git/office-agent-skills/.venv/bin/python
 ```
 
-Always validate and render populated documents before delivery.
+For another location, edit the runtime path in the copied skill or tell the agent the actual repository root. The repository itself remains necessary because the skill calls its scripts and reads its styles/templates.
 
-## License
-
-Original project code and skill instructions are Apache-2.0 licensed. Third-party libraries and optional external applications retain their own licenses. Do not add templates or brand assets unless you have permission to redistribute them.
+The separate skills remain available for agents that prefer per-format routing, but they are no longer required for the unified Antigravity setup.
