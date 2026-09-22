@@ -10,7 +10,8 @@ VENV = ROOT / ".venv"
 
 
 def run(cmd, cwd=None):
-    print(f"$ {' '.join(map(str, cmd))}")
+    printable = " ".join(map(str, cmd))
+    print(f"$ {printable}")
     subprocess.run([str(x) for x in cmd], cwd=cwd, check=True)
 
 
@@ -33,7 +34,12 @@ def venv_python():
 def install_requirements():
     py = venv_python()
     run([py, "-m", "pip", "install", "--upgrade", "pip"])
+    # The project is intentionally an empty Python package: its useful contents
+    # are skills and scripts. Installing editable still installs pyproject.toml
+    # dependencies without setuptools discovering skills/styles as packages.
     run([py, "-m", "pip", "install", "-e", ROOT])
+    print(f"Using environment interpreter: {py}")
+    run([py, "-m", "pip", "--version"])
 
 
 def ensure_node_packages():
