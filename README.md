@@ -1,99 +1,59 @@
 # Office Agent Skills
 
-A cross-platform, open-source Agent Skills toolkit for creating, inspecting, rendering, and validating DOCX, XLSX, PPTX, and PDF files.
+A cross-platform, open-source Agent Skills toolkit for creating, inspecting, rendering, validating, styling, and populating authorized templates for DOCX, XLSX, PPTX, and PDF files.
 
-Designed for Codex, Antigravity, Claude Code-style skill loaders, and compatible local agents.
+## Choose a generation mode
 
-## Features
+- **Scratch:** create a new document using `styles/default.json` or another theme.
+- **Template:** populate a user-owned branded template using explicit placeholders or mappings.
+- **Edit:** modify selected regions without rebuilding unrelated content.
 
-- Original, vendor-neutral `SKILL.md` instructions
-- Linux, macOS, and Windows setup
-- Python and Node.js document tooling
-- DOCX, XLSX, PPTX, and PDF workflows
-- Basic structural validation
-- Example generators
-- Apache-2.0 project license
-
-This project does not copy proprietary vendor skill files. It provides independent workflows around separately licensed libraries and external applications.
+See [docs/TEMPLATES.md](docs/TEMPLATES.md) and `skills/office-branding/SKILL.md`.
 
 ## Install
 
-### Linux
-
 ```bash
+# Linux
 ./scripts/setup-linux.sh
-```
 
-### macOS
-
-```bash
+# macOS
 ./scripts/setup-macos.sh
-```
 
-### Windows PowerShell
-
-```powershell
+# Windows PowerShell
 Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\setup-windows.ps1
 ```
 
-All setup scripts create `.venv`, install Python dependencies, and attempt to install or detect system tools. Review the output and install missing optional tools manually.
+## Agent integration
 
-## Use with an agent
-
-Copy the skills into your project:
+Copy the skills to a compatible project:
 
 ```bash
 mkdir -p .agents/skills
 cp -R skills/* .agents/skills/
 ```
 
-On Windows PowerShell:
+The skills include `office-docx`, `office-xlsx`, `office-pptx`, `office-pdf`, and `office-branding`.
 
-```powershell
-New-Item -ItemType Directory -Force .agents\skills | Out-Null
-Copy-Item -Recurse skills\* .agents\skills\
-```
+## Template examples
 
-Then instruct your agent to use the matching skill whenever the corresponding file type is involved.
-
-## Try the examples
+DOCX:
 
 ```bash
-# Linux/macOS
-. .venv/bin/activate
-python examples/office_report_demo.py --output-dir outputs/demo
-python scripts/validate-office-file.py outputs/demo/report.docx
-python scripts/validate-office-file.py outputs/demo/report.xlsx
-python scripts/validate-office-file.py outputs/demo/report.pdf
-
-# Windows
-. .venv\Scripts\Activate.ps1
-python examples/office_report_demo.py --output-dir outputs/demo
+.venv/bin/python scripts/replace-docx-placeholders.py \
+  templates/report.docx outputs/report.docx \
+  --value company_name="Example Corporation"
 ```
 
-For presentations, if Node.js dependencies are installed:
+XLSX:
 
 ```bash
-node examples/presentation_demo.js outputs/demo/report.pptx
-python scripts/validate-office-file.py outputs/demo/report.pptx
+.venv/bin/python scripts/populate-xlsx-template.py \
+  templates/budget.xlsx data.json outputs/budget.xlsx
 ```
 
-## Tool map
+Always validate and render populated documents before delivery.
 
-| Format | Primary tools | Optional rendering/validation |
-|---|---|---|
-| DOCX | `python-docx`, `docx` | LibreOffice, Pandoc |
-| XLSX | `openpyxl`, `pandas` | LibreOffice |
-| PPTX | `pptxgenjs` | LibreOffice, Poppler |
-| PDF | `pypdf`, `pdfplumber`, ReportLab, WeasyPrint | qpdf, Poppler |
+## License
 
-## MCP
-
-This repository is skills-first. It does not require MCP. A future MCP adapter can safely call the same scripts and libraries. Keep MCP as a thin, permission-controlled interface rather than exposing arbitrary shell execution.
-
-## Licensing
-
-The original project code and skill instructions are Apache-2.0 licensed. Third-party libraries and optional external applications retain their own licenses. See `NOTICE` and `THIRD_PARTY_LICENSES/`.
-
-This is software documentation, not legal advice. Review dependency licenses before redistributing bundled binaries.
+Original project code and skill instructions are Apache-2.0 licensed. Third-party libraries and optional external applications retain their own licenses. Do not add templates or brand assets unless you have permission to redistribute them.
