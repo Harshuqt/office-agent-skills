@@ -1,41 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "Python 3 is required."
+  echo "Python 3 is required." >&2
   exit 1
 fi
 
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install \
-  openpyxl \
-  python-docx \
-  pandas \
-  pypdf \
-  pdfplumber \
-  reportlab \
-  matplotlib \
-  weasyprint
-
+# Install system packages when a supported package manager is available.
 if command -v apt-get >/dev/null 2>&1; then
   sudo apt-get update
-  sudo apt-get install -y \
-    libreoffice \
-    pandoc \
-    poppler-utils \
-    fonts-dejavu-core
-fi
-
-if command -v npm >/dev/null 2>&1; then
-  npm install docx pptxgenjs
+  sudo apt-get install -y python3-venv libreoffice pandoc poppler-utils qpdf fonts-dejavu-core
+elif command -v brew >/dev/null 2>&1; then
+  brew install libreoffice pandoc poppler qpdf
 else
-  echo "npm not found. Install Node.js if you want docx or pptxgenjs support."
+  echo "Install LibreOffice, Pandoc, Poppler, and qpdf manually if needed."
 fi
 
-echo "Linux setup complete."
-echo "Use: . .venv/bin/activate"
+python3 scripts/setup.py
+python3 scripts/check-dependencies.py
